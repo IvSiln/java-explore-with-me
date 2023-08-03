@@ -10,7 +10,7 @@ public interface StatsService {
     EndpointHitDto create(EndpointHitDto endpointHitDto);
 
     List<WatchStatsDto> find(LocalDateTime start,
-                            LocalDateTime end,
-                            List<String> uris,
-                            boolean unique);
+                             LocalDateTime end,
+                             List<String> uris,
+                             boolean unique);
 }

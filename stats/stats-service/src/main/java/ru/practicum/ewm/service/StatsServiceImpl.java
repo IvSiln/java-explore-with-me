@@ -28,9 +28,9 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public List<WatchStatsDto> find(LocalDateTime start,
-                                   LocalDateTime end,
-                                   List<String> uris,
-                                   boolean unique) {
+                                    LocalDateTime end,
+                                    List<String> uris,
+                                    boolean unique) {
 
         List<WatchStats> viewStatsList = new ArrayList<>();
 
