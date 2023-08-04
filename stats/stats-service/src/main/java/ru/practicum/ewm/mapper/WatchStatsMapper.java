@@ -1,6 +1,7 @@
-package ru.practicum.ewm.model;
+package ru.practicum.ewm.mapper;
 
 import ru.practicum.ewm.dto.WatchStatsDto;
+import ru.practicum.ewm.model.WatchStats;
 
 public class WatchStatsMapper {
 
