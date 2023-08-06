@@ -9,5 +9,7 @@ import java.util.List;
 public interface HitService {
     void createHit(HitDto hitDto);
 
-    List<Stats> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique);
+    List<Stats> getStats(LocalDateTime start, LocalDateTime end, List<String> uris);
+
+    List<Stats> getUniqueStats(LocalDateTime start, LocalDateTime end, List<String> uris);
 }

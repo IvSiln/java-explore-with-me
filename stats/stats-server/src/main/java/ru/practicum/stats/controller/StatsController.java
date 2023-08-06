@@ -13,8 +13,8 @@ import java.util.List;
 
 @RestController
 public class StatsController {
-    private final HitService hitService;
     private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final HitService hitService;
 
     public StatsController(HitService hitService) {
         this.hitService = hitService;
@@ -30,9 +30,11 @@ public class StatsController {
     public List<Stats> getStats(@RequestParam String start,
                                 @RequestParam String end,
                                 @RequestParam(value = "uris", required = false, defaultValue = "") List<String> uris,
-                                @RequestParam(value = "unique", required = false, defaultValue = "false") Boolean uniq) {
+                                @RequestParam(value = "unique", required = false, defaultValue = "false") Boolean unique) {
         LocalDateTime updStart = LocalDateTime.parse(start, FORMAT);
         LocalDateTime updEnd = LocalDateTime.parse(end, FORMAT);
-        return hitService.getStats(updStart, updEnd, uris, uniq);
+        return unique
+                ? hitService.getUniqueStats(updStart, updEnd, uris)
+                : hitService.getStats(updStart, updEnd, uris);
     }
 }

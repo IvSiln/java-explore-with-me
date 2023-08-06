@@ -13,6 +13,8 @@ import ru.practicum.stats.repository.HitRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static java.util.Objects.isNull;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -27,21 +29,24 @@ public class HitServiceImpl implements HitService {
     }
 
     @Override
-    public List<Stats> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
-        validDate(start, end);
-        if (unique) {
-            if (!uris.isEmpty()) {
-                return hitRepository.getUniqueStats(start, end, uris);
-            } else return hitRepository.getUniqueStatsWithoutUris(start, end);
-        } else {
-            if (!uris.isEmpty()) {
-                return hitRepository.getNotUniqueStats(start, end, uris);
-            } else return hitRepository.getNotUniqueStatsWithoutUris(start, end);
-        }
+    public List<Stats> getStats(LocalDateTime start, LocalDateTime end, List<String> uris) {
+        validateDateOrder(start, end);
+        return !uris.isEmpty()
+                ? hitRepository.getNotUniqueStats(start, end, uris)
+                : hitRepository.getNotUniqueStatsWithoutUris(start, end);
     }
 
-    private void validDate(LocalDateTime start, LocalDateTime end) {
-        if (end.isBefore(start)) {
+    @Override
+    public List<Stats> getUniqueStats(LocalDateTime start, LocalDateTime end, List<String> uris) {
+        validateDateOrder(start, end);
+        return !uris.isEmpty()
+                ? hitRepository.getUniqueStats(start, end, uris)
+                : hitRepository.getUniqueStatsWithoutUris(start, end);
+
+    }
+
+    private void validateDateOrder(LocalDateTime start, LocalDateTime end) {
+        if (isNull(start) || isNull(end) || end.isBefore(start)) {
             throw new BadRequestException("Дата конца не может быть перед датой начала.");
         }
     }
