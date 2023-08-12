@@ -32,5 +32,4 @@ public class RequestController {
                                           @PathVariable Long requestId) {
         return requestService.cancel(userId, requestId);
     }
-
 }

@@ -25,5 +25,4 @@ public class PublicCompilationController {
     public CompilationDto get(@PathVariable Long compId) {
         return compilationService.get(compId);
     }
-
 }

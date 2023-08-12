@@ -51,6 +51,4 @@ public class ExploreConstantsAndStaticMethods {
             throw new BadRequestException(INVALID_EVENT_DATE);
         }
     }
-
-
 }
