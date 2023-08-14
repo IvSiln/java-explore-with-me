@@ -14,7 +14,7 @@ public interface HitRepository extends JpaRepository<Hit, Long> {
             "FROM Hit h " +
             "WHERE h.timestamp BETWEEN ?1 AND ?2 AND h.uri IN ?3 " +
             "GROUP BY h.app, h.uri " +
-            "ORDER BY COUNT(DISTINCT h.ip) DESC")
+            "ORDER BY COUNT(h.ip) DESC")
     List<Stats> getUniqueStats(LocalDateTime start, LocalDateTime end, List<String> uris);
 
     // Получение статистики без учета уникальных IP по временному промежутку и URI
@@ -30,7 +30,7 @@ public interface HitRepository extends JpaRepository<Hit, Long> {
             "FROM Hit h " +
             "WHERE h.timestamp BETWEEN ?1 AND ?2 " +
             "GROUP BY h.app, h.uri " +
-            "ORDER BY COUNT(DISTINCT h.ip) DESC")
+            "ORDER BY COUNT(h.ip) DESC")
     List<Stats> getUniqueStatsWithoutUris(LocalDateTime start, LocalDateTime end);
 
     // Получение статистики без учета уникальных IP по временному промежутку без URI

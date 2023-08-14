@@ -58,7 +58,8 @@ public class StatService {
     private Long extractViews(ResponseEntity<Object> response) {
         try {
             String responseValue = mapper.writeValueAsString(response.getBody());
-            List<ViewStats> viewStats = Arrays.asList(mapper.readValue(responseValue, new TypeReference<>(){}));
+            List<ViewStats> viewStats = Arrays.asList(mapper.readValue(responseValue, new TypeReference<>() {
+            }));
             return viewStats.isEmpty() ? 0 : viewStats.get(0).getHits();
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

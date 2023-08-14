@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UpdateEventAdminRequest extends UpdateEventRequest{
+public class UpdateEventAdminRequest extends UpdateEventRequest {
 
 }

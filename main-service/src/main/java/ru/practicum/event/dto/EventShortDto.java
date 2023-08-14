@@ -9,6 +9,6 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @AllArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class EventShortDto extends EventDto{
+public class EventShortDto extends EventDto {
 
 }

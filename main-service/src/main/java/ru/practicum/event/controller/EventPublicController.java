@@ -20,13 +20,13 @@ public class EventPublicController {
 
     @GetMapping
     public List<EventShortDto> get(@Valid @ModelAttribute EventFilterParamsDto params,
-                            HttpServletRequest request) {
+                                   HttpServletRequest request) {
         return eventService.getEventsByPublic(params, request);
     }
 
     @GetMapping(value = "/{id}")
     public EventFullDto get(@PathVariable Long id,
-                     HttpServletRequest request) {
+                            HttpServletRequest request) {
         return eventService.getEventsByPublic(id, request);
     }
 }

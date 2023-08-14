@@ -16,8 +16,8 @@ public class PublicCompilationController {
 
     @GetMapping
     public List<CompilationDto> get(@RequestParam(required = false, defaultValue = "false") Boolean pinned,
-                             @RequestParam(required = false, defaultValue = "0") Integer from,
-                             @RequestParam(required = false, defaultValue = "10")Integer size) {
+                                    @RequestParam(required = false, defaultValue = "0") Integer from,
+                                    @RequestParam(required = false, defaultValue = "10") Integer size) {
         return compilationService.getAll(pinned, from, size);
     }
 
@@ -25,5 +25,4 @@ public class PublicCompilationController {
     public CompilationDto get(@PathVariable Long compId) {
         return compilationService.get(compId);
     }
-
 }

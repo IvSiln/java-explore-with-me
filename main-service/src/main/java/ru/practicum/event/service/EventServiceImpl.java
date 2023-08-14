@@ -18,8 +18,8 @@ import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.event.service.statistics.StatService;
-import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.BadRequestException;
+import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.request.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.request.dto.EventRequestStatusUpdateResult;
@@ -47,13 +47,13 @@ import static ru.practicum.utils.ExploreDateTimeFormatter.stringToLocalDateTime;
 @Transactional(readOnly = true)
 public class EventServiceImpl implements AdminEventService, PublicEventService, PrivateEventService {
 
-    private static final List<EventState> STATES_OF_EVENTS_THAT_CAN_BE_UPDATED =  List.of(
+    private static final List<EventState> STATES_OF_EVENTS_THAT_CAN_BE_UPDATED = List.of(
             EventState.PENDING,
             EventState.CANCELED,
             EventState.REJECTED
     );
 
-    private static final List<EventState> STATES_OF_EVENTS_THAT_CAN_BE_REJECTED_OR_PUBLISHED =  List.of(
+    private static final List<EventState> STATES_OF_EVENTS_THAT_CAN_BE_REJECTED_OR_PUBLISHED = List.of(
             EventState.PENDING
     );
 
@@ -68,6 +68,21 @@ public class EventServiceImpl implements AdminEventService, PublicEventService, 
     private final ParticipationRequestMapper requestMapper;
 
     private final StatService statService;
+
+    private static void checkAllRequestsPending(List<ParticipationRequest> requests) {
+        boolean allPending = requests.stream()
+                .allMatch(r -> r.getStatus() == RequestStatus.PENDING);
+        if (!allPending) {
+            throw new ConflictException(EVENT_REQUEST_STATUS_CHANGE_FORBIDDEN);
+        }
+    }
+
+    private static LocalDateTime getFromStringOrSetDefault(String dateTimeString, LocalDateTime defaultValue) throws UnsupportedEncodingException {
+        if (dateTimeString != null) {
+            return ExploreUrlDecoder.urlStringToLocalDateTime(dateTimeString);
+        }
+        return defaultValue;
+    }
 
     @Override
     @Transactional
@@ -242,14 +257,6 @@ public class EventServiceImpl implements AdminEventService, PublicEventService, 
         return eventDto;
     }
 
-    private static void checkAllRequestsPending(List<ParticipationRequest> requests) {
-        boolean allPending = requests.stream()
-                .allMatch(r -> r.getStatus() == RequestStatus.PENDING);
-        if (!allPending) {
-            throw new ConflictException(EVENT_REQUEST_STATUS_CHANGE_FORBIDDEN);
-        }
-    }
-
     private void checkEventIsPublished(EventState state) {
         boolean published = (state == EventState.PUBLISHED);
         if (!published) {
@@ -267,18 +274,11 @@ public class EventServiceImpl implements AdminEventService, PublicEventService, 
             if (end != null && end.isBefore(start)) {
                 throw new BadRequestException(EVENT_INCORRECT_TIME_RANGE_FILTER);
             }
-            params = eventMapper.toEventFilterParams(paramsDto,start, end);
+            params = eventMapper.toEventFilterParams(paramsDto, start, end);
         } catch (UnsupportedEncodingException e) {
             throw new ConflictException(EVENT_SEARCH_INVALID_PARAMETERS);
         }
         return params;
-    }
-
-    private static LocalDateTime getFromStringOrSetDefault(String dateTimeString, LocalDateTime defaultValue) throws UnsupportedEncodingException {
-        if (dateTimeString != null) {
-            return ExploreUrlDecoder.urlStringToLocalDateTime(dateTimeString);
-        }
-        return defaultValue;
     }
 
     private void publishEvent(UpdateEventAdminRequest request, Event event) {

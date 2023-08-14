@@ -10,12 +10,4 @@ public interface HitMapper {
     HitMapper INSTANCE = Mappers.getMapper(HitMapper.class);
 
     Hit toHit(HitDto hitDto);
-//    public static Hit toHit(HitDto hitDto) {
-//        return Hit.builder()
-//                .app(hitDto.getApp())
-//                .uri(hitDto.getUri())
-//                .ip(hitDto.getIp())
-//                .timestamp(hitDto.getTimestamp())
-//                .build();
-//    }
 }
