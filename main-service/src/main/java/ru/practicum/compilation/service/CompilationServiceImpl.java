@@ -19,6 +19,7 @@ import ru.practicum.exception.NotFoundException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static ru.practicum.utils.ExploreConstantsAndStaticMethods.*;
 
@@ -89,7 +90,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     private void updateEvents(Compilation comp, List<Long> eventIds) {
-        if (!eventIds.isEmpty()) {
+        if (Objects.nonNull(eventIds)) {
             List<Event> updatedEvents = fetchEvents(eventIds);
             comp.setEvents(updatedEvents);
         }
@@ -102,15 +103,15 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     private void updateTitle(Compilation comp, String newTitle) {
-        if (newTitle != null) {
+        if (Objects.nonNull(newTitle)) {
             checkTitleNotUnique(newTitle, comp.getId());
-            comp.setTitle(newTitle);
         }
     }
 
     private void checkTitleNotUnique(String newTitle, Long compId) {
-        if (compilationRepository.existsByTitleAndIdNot(newTitle, compId)) {
+        Optional<Compilation> titleNotUnique = compilationRepository.findFirst1ByTitleAndIdNotIn(newTitle, List.of(compId));
+        titleNotUnique.ifPresent((cmp) -> {
             throw new ConflictException(COMPILATION_TITLE_ALREADY_EXIST);
-        }
+        });
     }
 }

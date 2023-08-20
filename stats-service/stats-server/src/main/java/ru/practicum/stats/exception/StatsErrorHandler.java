@@ -11,7 +11,7 @@ import ru.practicum.exception.BadRequestException;
 import javax.validation.ConstraintViolationException;
 
 @RestControllerAdvice
-public class ErrorHandler {
+public class StatsErrorHandler {
     @ExceptionHandler(value = {ConstraintViolationException.class,
             MethodArgumentNotValidException.class,
             MissingPathVariableException.class,
