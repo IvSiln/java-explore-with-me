@@ -33,14 +33,12 @@ public class EventPrivateController {
     public List<EventShortDto> getEvents(@PathVariable Long userId,
                                          @RequestParam(required = false, defaultValue = "0") Integer from,
                                          @RequestParam(required = false, defaultValue = "10") Integer size) {
-        System.out.println(eventService.getEventsByPrivate(userId, from, size).toString());
         return eventService.getEventsByPrivate(userId, from, size);
     }
 
     @GetMapping(value = "/{userId}/events/{eventId}")
     public EventFullDto getEvent(@PathVariable Long userId,
                                  @PathVariable Long eventId) {
-        System.out.println(eventService.getEventByPrivate(userId, eventId).toBuilder());
         return eventService.getEventByPrivate(userId, eventId);
     }
 
@@ -48,7 +46,6 @@ public class EventPrivateController {
     public EventFullDto update(@PathVariable Long userId,
                                @PathVariable Long eventId,
                                @Valid @RequestBody UpdateEventUserRequest updateRequest) {
-        System.out.println(eventService.updateByPrivate(updateRequest, userId, eventId).toBuilder());
         return eventService.updateByPrivate(updateRequest, userId, eventId);
     }
 

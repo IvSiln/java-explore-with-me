@@ -21,7 +21,6 @@ public class EventPublicController {
     @GetMapping
     public List<EventShortDto> get(@Valid @ModelAttribute EventFilterParamsDto params,
                                    HttpServletRequest request) {
-        System.out.println(eventService.getEventsByPublic(params, request));
         return eventService.getEventsByPublic(params, request);
     }
 
