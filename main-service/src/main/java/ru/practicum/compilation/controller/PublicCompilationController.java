@@ -18,11 +18,14 @@ public class PublicCompilationController {
     public List<CompilationDto> get(@RequestParam(required = false, defaultValue = "false") Boolean pinned,
                                     @RequestParam(required = false, defaultValue = "0") Integer from,
                                     @RequestParam(required = false, defaultValue = "10") Integer size) {
+        System.out.println(compilationService.getAll(pinned, from, size));
         return compilationService.getAll(pinned, from, size);
     }
 
     @GetMapping(value = "/{compId}")
     public CompilationDto get(@PathVariable Long compId) {
+        System.out.println(compilationService.get(compId));
+
         return compilationService.get(compId);
     }
 }

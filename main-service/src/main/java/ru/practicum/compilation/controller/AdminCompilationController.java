@@ -20,12 +20,14 @@ public class AdminCompilationController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CompilationDto create(@Valid @RequestBody NewCompilationDto compDto) {
+        System.out.println(compilationService.create(compDto).toBuilder());
         return compilationService.create(compDto);
     }
 
     @PatchMapping("/{compId}")
     public CompilationDto update(@PathVariable Long compId,
                                  @Valid @RequestBody UpdateCompilationRequest request) {
+        // System.out.println(compilationService.update(compId, request).toBuilder());
         return compilationService.update(compId, request);
     }
 
