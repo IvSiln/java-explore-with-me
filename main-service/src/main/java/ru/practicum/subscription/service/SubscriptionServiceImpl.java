@@ -128,7 +128,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         log.info("Getting user by ID: {}", userId);
         Optional<User> user = userRepository.findById(userId);
 
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             log.error("User with ID {} not found. Could not find user by ID.", userId);
             throw new NotFoundException(USER_NOT_FOUND_EXCEPTION_MESSAGE);
         }
