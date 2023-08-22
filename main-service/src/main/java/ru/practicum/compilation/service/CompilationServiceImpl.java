@@ -19,7 +19,6 @@ import ru.practicum.exception.NotFoundException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import static ru.practicum.utils.ExploreConstantsAndStaticMethods.*;
 
@@ -109,9 +108,9 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     private void checkTitleNotUnique(String newTitle, Long compId) {
-        Optional<Compilation> titleNotUnique = compilationRepository.findFirst1ByTitleAndIdNotIn(newTitle, List.of(compId));
-        titleNotUnique.ifPresent((cmp) -> {
-            throw new ConflictException(COMPILATION_TITLE_ALREADY_EXIST);
-        });
+        compilationRepository.findFirst1ByTitleAndIdNotIn(newTitle, List.of(compId))
+                .ifPresent((cmp) -> {
+                    throw new ConflictException(COMPILATION_TITLE_ALREADY_EXIST);
+                });
     }
 }

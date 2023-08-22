@@ -22,7 +22,7 @@ import static ru.practicum.util.StatsClientConstants.*;
 @Service
 public class StatsClient extends BaseClient {
 
-    public StatsClient(@Value("${stats-server.url}") String serverUrl, RestTemplateBuilder builder) {
+    public StatsClient(@Value("${STATS_SERVER_URL://localhost:9090}") String serverUrl, RestTemplateBuilder builder) {
         super(serverUrl, builder);
     }
 

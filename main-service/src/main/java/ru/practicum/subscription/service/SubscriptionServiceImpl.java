@@ -1,6 +1,7 @@
 package ru.practicum.subscription.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.enums.SubscriptionType;
@@ -23,6 +24,7 @@ import static ru.practicum.enums.SubscriptionType.EVENTS;
 import static ru.practicum.enums.SubscriptionType.PARTICIPATIONS;
 import static ru.practicum.utils.ExploreConstantsAndStaticMethods.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SubscriptionServiceImpl implements SubscriptionService {
@@ -36,11 +38,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     @Transactional
     public void subscribe(Long userId, Long ownerId, SubscriptionType type) {
+        log.info("Subscribing user {} to owner {} with type {}", userId, ownerId, type);
         checkUsersExistenceById(userId, ownerId);
         if (getSubscription(userId, ownerId, type).isEmpty()) {
+            log.info("Creating new subscription for user {} to owner {} with type {}", userId, ownerId, type);
             Subscription newSub = createNewSubscription(userId, ownerId, type);
             subRepository.save(newSub);
+            log.info("Subscription created successfully.");
         } else {
+            log.error("Subscription already exists for user {} to owner {} with type {}", userId, ownerId, type);
             throw new ConflictException(SUBSCRIPTION_ALREADY_EXISTS);
         }
     }
@@ -48,6 +54,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     @Transactional
     public void cancel(Long userId, Long ownerId, SubscriptionType type) {
+        log.info("Cancelling subscription of user {} to owner {} with type {}", userId, ownerId, type);
         Subscription sub = getSubscriptionIfExists(userId, ownerId, type);
         subRepository.delete(sub);
     }
@@ -55,6 +62,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     @Transactional(readOnly = true)
     public List<UserShortDto> get(Long userId, SubscriptionType type) {
+        log.info("Getting users subscribed by user {} with type {}", userId, type);
         List<User> subscriptions = subRepository.getUsersSubscribed(userId, type);
         return userMapper.toShortDtoList(subscriptions);
     }
@@ -62,6 +70,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     @Transactional(readOnly = true)
     public List<EventShortDto> getSubscriptions(Long userId, Long ownerId, SubscriptionType type) {
+        log.info("Getting event subscriptions of user {} to owner {} with type {}", userId, ownerId, type);
         return (type == SubscriptionType.EVENTS)
                 ? getEventsByOwner(userId, ownerId)
                 : getEventsByParticipant(userId, ownerId);
@@ -70,6 +79,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     @Transactional(readOnly = true)
     public List<EventShortDto> getSubscriptions(Long userId, SubscriptionType type) {
+        log.info("Getting event subscriptions of user {} with type {}", userId, type);
         checkUsersExistenceById(userId);
         List<Event> events = (type == SubscriptionType.EVENTS)
                 ? subRepository.getOwnersEventsFromAllSubscribed(userId)
@@ -115,7 +125,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     private void getUserIfExists(Long userId) {
-        userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_EXCEPTION_MESSAGE));
+        log.info("Getting user by ID: {}", userId);
+        Optional<User> user = userRepository.findById(userId);
+
+        if (!user.isPresent()) {
+            log.error("User with ID {} not found. Could not find user by ID.", userId);
+            throw new NotFoundException(USER_NOT_FOUND_EXCEPTION_MESSAGE);
+        }
     }
 }
