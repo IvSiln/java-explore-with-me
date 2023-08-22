@@ -33,4 +33,5 @@ public class AdminController {
     public void delete(@PathVariable Long catId) {
         categoryService.delete(catId);
     }
+
 }

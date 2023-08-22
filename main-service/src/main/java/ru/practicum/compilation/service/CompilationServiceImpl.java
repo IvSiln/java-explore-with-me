@@ -89,7 +89,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     private void updateEvents(Compilation comp, List<Long> eventIds) {
-        if (!eventIds.isEmpty()) {
+        if (Objects.nonNull(eventIds)) {
             List<Event> updatedEvents = fetchEvents(eventIds);
             comp.setEvents(updatedEvents);
         }
@@ -102,15 +102,15 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     private void updateTitle(Compilation comp, String newTitle) {
-        if (newTitle != null) {
+        if (Objects.nonNull(newTitle)) {
             checkTitleNotUnique(newTitle, comp.getId());
-            comp.setTitle(newTitle);
         }
     }
 
     private void checkTitleNotUnique(String newTitle, Long compId) {
-        if (compilationRepository.existsByTitleAndIdNot(newTitle, compId)) {
-            throw new ConflictException(COMPILATION_TITLE_ALREADY_EXIST);
-        }
+        compilationRepository.findFirst1ByTitleAndIdNotIn(newTitle, List.of(compId))
+                .ifPresent((cmp) -> {
+                    throw new ConflictException(COMPILATION_TITLE_ALREADY_EXIST);
+                });
     }
 }
